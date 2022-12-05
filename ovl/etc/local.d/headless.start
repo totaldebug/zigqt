@@ -1,5 +1,14 @@
 #!/bin/sh
 
+VERSION="0.1"
+
+exec 1>/dev/console 2>&1
+
+logger -st ${0##*/} "Alpine Linux Headless bootstrap v$VERSION by totaldebug"
+
+echo "http://dl-cdn.alpinelinux.org/alpine/latest-stable/main" >> /etc/apk/repositories
+
+
 ## Setup wifi
 if [ -f "/etc/wpa_supplicant/wpa_supplicant.conf" ]; then
 	logger -st ${0##*/} "Wifi setup found !"
@@ -9,7 +18,7 @@ else
 	logger -st ${0##*/} "Wifi setup not found skipping!"
 fi
 
-if ! [ -f "/etc/network/interfaces" ]; then
+if [ ! -f "/etc/network/interfaces" ]; then
 	# set default interfaces if not specified by interface file on boot storage
 	logger -st ${0##*/} "No interfaces file supplied, building default interfaces..."
 	for dev in $(ls /sys/class/net)
@@ -24,7 +33,10 @@ if ! [ -f "/etc/network/interfaces" ]; then
 			eth)
 					cat <<-EOF >> /etc/network/interfaces
 					auto $dev
-					iface $dev inet dhcp
+					iface $dev inet static
+						address 192.168.1.250
+						netmask 255.255.255.0
+						gateway 192.168.1.1
 					EOF
 					;;
 			wlan)
@@ -40,12 +52,6 @@ if ! [ -f "/etc/network/interfaces" ]; then
 					    address 10.42.0.2/24
 					    gateway 10.42.0.1
 					EOF
-
-					cat <<-EOF > /etc/resolv.conf
-					nameserver 1.1.1.1
-					nameserver 1.0.0.1
-					EOF
-					;;
 		esac
 	done
 fi
@@ -79,6 +85,3 @@ PermitRootLogin yes
 EOF
 service sshd restart
 mv /etc/ssh/sshd_config.orig /etc/ssh/sshd_config
-
-# Simulate a daemon
-sleep infinity
