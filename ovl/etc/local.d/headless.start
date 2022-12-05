@@ -72,10 +72,36 @@ hostname -F /etc/hostname
 rc-service networking start
 
 
+## Setup temporary SSH server (root login, no password)
+## we use some bundled keys to avoid generation at boot and save time
+## bundled temporary keys are moved in /tmp so they won't be stored
+## within permanent config later (new ones will then be generated)
+apk add openssh
+
+mv /etc/ssh/ssh_host_* /tmp/.trash/.
+
+cp /etc/ssh/sshd_config /etc/ssh/sshd_config.orig
+cat <<-EOF >> /etc/ssh/sshd_config
+	AuthenticationMethods none
+	PermitEmptyPasswords yes
+	PermitRootLogin yes
+	HostKey /tmp/.trash/ssh_host_ed25519_key
+	HostKey /tmp/.trash/ssh_host_rsa_key
+	EOF
+
+cp /etc/conf.d/sshd /etc/conf.d/sshd.orig
+cat <<-EOF >> /etc/conf.d/sshd
+	sshd_disable_keygen=yes
+	EOF
+
+rc-service sshd start
+
 ## Prep for final post-cleanup
 cat <<-EOF > /tmp/.trash/post-cleanup
 	#!/bin/sh
 	logger -st ${0##*/} "Cleaning-up..."
+	mv /etc/ssh/sshd_config.orig /etc/ssh/sshd_config
+	mv /etc/conf.d/sshd.orig /etc/conf.d/sshd
 	rm /etc/modules-load.d/g_ether.conf
 	rm /etc/modprobe.d/g_ether.conf
 	rc-update del local default
