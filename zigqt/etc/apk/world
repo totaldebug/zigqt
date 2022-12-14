@@ -1,0 +1,14 @@
+alpine-base
+avahi
+busybox-mdev-openrc
+chrony
+dbus
+g++
+gcc
+git
+iw
+make
+openssh
+openssl
+sudo
+zigbee2mqtt

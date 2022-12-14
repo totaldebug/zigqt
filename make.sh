@@ -1,4 +1,6 @@
 #!/bin/sh
 
-cd ovl && tar czvf ../localhost.apkovl.tar.gz *
+chmod +x zigqt/usr/local/bin/headless.sh
+chmod +x zigqt/etc/init.d/headless
+cd zigqt && tar czvf ../zigqt.apkovl.tar.gz *
 cd ..
