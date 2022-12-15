@@ -91,7 +91,7 @@ This section should list any major frameworks/libraries used to bootstrap your p
 <!-- GETTING STARTED -->
 ## Getting Started
 
-I recommend following this article [Creating a standalone zigbee2mqtt hub using Alpine Linux](https://totaldebug.uk), which includes downloading & creating installation media as well as applying this custom overlay. Tools provided here can be used on any platform for any install modes (diskless, data disk, system disk).
+I recommend following this article [Creating a standalone zigbee2mqtt hub using Alpine Linux](https://totaldebug.uk/posts/creating-standalone-zigbee2mqtt-hub-with-alpine-linux/), which includes downloading & creating installation media as well as applying this custom overlay. Tools provided here can be used on any platform for any install modes (diskless, data disk, system disk).
 
 ### Prerequisites
 
@@ -126,7 +126,7 @@ Main execution steps are logged in `/var/log/messages`.
 ### Additional Configuration
 
 Add-on files may be added next to `zigqt.apkovl.tar.gz` to customise setup (sample files are provided):
-- `interfaces` (*optional*): define network interfaces at will, if defaults DCHP-based are not suitable.
+- `interfaces` (*optional*): define network interfaces at will, if defaults DHCP-based are not suitable.
 - `wpa_supplicant.conf` (*mandatory for wifi use*): define wifi SSID & password.
 - `configuration.yaml` (*optional*): define configuration for zigbee2mqtt, a default configuration will be applied if not provided.
 - `secret.yaml` (*optional*): define secrets for zigbee2mqtt, random will be generated on first boot if this is not provided.
